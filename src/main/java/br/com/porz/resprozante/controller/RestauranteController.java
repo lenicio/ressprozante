@@ -7,7 +7,9 @@ import br.com.porz.resprozante.model.Restaurante;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/restaurante")
@@ -52,7 +54,7 @@ public class RestauranteController {
 
 
   @PutMapping("/prato")
-  public ResponseEntity<Prato> editaPrato(@RequestParam long id, @RequestBody PratoDto pratoDto) {
+  public ResponseEntity<Object> editaPrato(@RequestParam long id, @RequestBody PratoDto pratoDto) {
     for (Prato prato : restaurante.getPratos()) {
       if (prato.getId() == id) {
         prato.setNome(pratoDto.nome());
@@ -61,7 +63,29 @@ public class RestauranteController {
         return ResponseEntity.ok(prato);
       }
     }
-    return ResponseEntity.notFound().build();
+
+    Map<String, String> resposta = new HashMap<>();
+    resposta.put("mensagem", "prato não encontrado!");
+
+    return ResponseEntity.status(404).body(resposta);
+  }
+
+
+  @DeleteMapping("/prato")
+  public ResponseEntity<Object> deletaPrato(@RequestParam long id) {
+
+    Map<String, String> respota = new HashMap<>();
+
+    for (Prato prato : restaurante.getPratos()) {
+      if (prato.getId() == id) {
+        restaurante.remover(prato);
+        respota.put("mensagem", "prato removido com sucesso!");
+        return ResponseEntity.ok(respota);
+      }
+    }
+
+    respota.put("mensagem", "prato não encontrado!");
+    return ResponseEntity.status(404).body(respota);
   }
 
 
