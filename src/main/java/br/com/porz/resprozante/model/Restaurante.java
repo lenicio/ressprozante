@@ -28,9 +28,10 @@ public class Restaurante {
   }
 
 
-  public void adicionar(Prato prato) {
+  public Prato adicionar(Prato prato) {
     pratos.add(prato);
     this.idPrato++;
+    return prato;
   }
 
 
